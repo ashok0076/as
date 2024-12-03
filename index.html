@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p1>
+    #include <stdio.h>
+        #include <string.h>
+        #include <stdbool.h>
+         
+        bool match(char text[], char pat1[], char pat2[]);
+        bool revmatch(char text[], char pat1[], char pat2[]);
+         
+        int main() {
+           char text[100000], pattern1[102], pattern2[102];
+         
+           // Use fgets for safer input handling
+           fgets(text, sizeof(text), stdin);
+           fgets(pattern1, sizeof(pattern1), stdin);
+           fgets(pattern2, sizeof(pattern2), stdin);
+         
+           // Remove newline characters if present
+           text[strcspn(text, "\n")] = 0;
+           pattern1[strcspn(pattern1, "\n")] = 0;
+           pattern2[strcspn(pattern2, "\n")] = 0;
+         
+           bool forwardd = match(text, pattern1, pattern2);
+           bool reversee = revmatch(text, pattern1, pattern2);
+         
+           if (forwardd && !reversee)
+               printf("forward\n");
+           else if (forwardd && reversee)
+               printf("both\n");
+           else if (!forwardd && reversee)
+               printf("backward\n");
+           else
+               printf("fantasy\n");
+         
+           return 0;
+        }
+         
+        bool match(char text[], char pat1[], char pat2[]) {
+           int m = strlen(pat1);
+           int n = strlen(text);
+           int o = strlen(pat2);
+         
+           for (int i = 0; i <= n - m; i++) {
+               if (strncmp(&text[i], pat1, m) == 0) {
+                   i += m; // move past pattern1
+                   for (; i <= n - o; i++) {
+                       if (strncmp(&text[i], pat2, o) == 0) {
+                           return true;
+                       }
+                   }
+               }
+           }
+           return false;
+        }
+         
+        bool revmatch(char text[], char pat1[], char pat2[]) {
+           int m = strlen(pat1);
+           int n = strlen(text);
+           int o = strlen(pat2);
+         
+           for (int i = n - 1; i >= 0; i--) {
+               if (i >= m - 1 && strncmp(&text[i - m + 1], pat1, m) == 0) {
+                   i -= m; // move past pattern1
+                   for (; i >= o - 1; i--) {
+                       if (strncmp(&text[i - o + 1], pat2, o) == 0) {
+                           return true;
+                       }
+                   }
+               }
+           }
+           return false;
+        }
+    </p1>
+</body>
+</html>
